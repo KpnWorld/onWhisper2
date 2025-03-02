@@ -1,0 +1,32 @@
+name: Notify Discord of Changes
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Get latest commit details
+        id: commit
+        run: |
+          echo "COMMIT_MESSAGE=$(git log -1 --pretty=format:'%s')" >> $GITHUB_ENV
+          echo "COMMIT_AUTHOR=$(git log -1 --pretty=format:'%an')" >> $GITHUB_ENV
+          echo "COMMIT_URL=${{ github.event.repository.html_url }}/commit/${{ github.sha }}" >> $GITHUB_ENV
+
+      - name: Send notification to Discord
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        run: |
+          curl -H "Content-Type: application/json" \
+          -X POST \
+          -d "{\"content\": \"📢 A new commit has been pushed!\n**Author:** $COMMIT_AUTHOR\n**Message:** $COMMIT_MESSAGE\n🔗 [View Commit]($COMMIT_URL)\"}" \
+          "$DISCORD_WEBHOOK"
