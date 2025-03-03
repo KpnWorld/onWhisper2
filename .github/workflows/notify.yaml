@@ -1,5 +1,6 @@
 name: Notify Discord of Changes
 
+
 on:
   push:
     branches:
