@@ -10,3 +10,4 @@ def restart_bot():
     return "Bot restarting...", 200
 
 app.run(host="0.0.0.0", port=8080)
+ 
