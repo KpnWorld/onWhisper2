@@ -1,7 +1,8 @@
-# bot.py 🎉 V1.0.0
+# bot.py 🎉 V1.4.0
 import os
 import discord
-from discord.ext import commands, tasks
+from discord import app_commands
+from discord.ext import commands, tasks 
 import logging
 import asyncio
 import random
@@ -16,6 +17,7 @@ class CustomBot(commands.Bot):
 
     async def setup_hook(self):
         self.session = aiohttp.ClientSession()
+        self.tree.add_command(help_command)  # Register help command properly
 
     async def close(self):
         await self.session.close()
@@ -83,36 +85,22 @@ async def change_activity():
     logger.info(f"Changed bot activity to: {activity.name}")
 
 # Updated help command to send an embed
-@bot.command()
-async def help(ctx):
-    embed = discord.Embed(title="Available Commands",
-                          description="List of commands you can use:",
-                          color=discord.Color.blue())
-    embed.add_field(name="/ping",
-                    value="Test the bot's responsiveness.",
-                    inline=False)
-    embed.add_field(name="/uptime",
-                    value="Check the bot's uptime.",
-                    inline=False)
-    embed.add_field(name="/serverinfo",
-                    value="Get information about the server.",
-                    inline=False)
-    embed.add_field(name="/userinfo [user]",
-                    value="Get information about a user.",
-                    inline=False)
-    embed.add_field(name="/botinfo",
-                    value="Get information about the bot.",
-                    inline=False)
-    embed.add_field(
-        name="/whisper_admin",
-        value="Send a secret message to any channel (admins/mods).",
-        inline=False)
-    embed.add_field(name="/whisper",
-                    value="Send a secret message in this channel.",
-                    inline=False)
+@bot.tree.command(name="help", description="Current Available Commands")
+async def help_command(interaction: discord.Interaction):
+    embed = discord.Embed(title="Available Commands", color=discord.Color.blue())
+    commands_list = [
+        {"name": "admin_whisper", "description": "Send a secret message to a specified channel (admins/mods)."},
+        {"name": "whisper", "description": "Send a secret message in this channel."},
+        {"name": "ping", "description": "Check the bot's latency."},
+        {"name": "uptime", "description": "Check the bot's uptime."},
+        {"name": "serverinfo", "description": "Get information about the server."},
+        {"name": "userinfo", "description": "Get information about a user."},
+        {"name": "help", "description": "Display this help message."},
+    ]
+    for command in commands_list:
+        embed.add_field(name=f"/{command['name']}", value=command['description'], inline=False)
 
-    logger.info(f"Help command used by {ctx.author}")
-    await ctx.send(embed=embed)
+    await interaction.response.send_message(embed=embed)
 
 # Handle errors and log them
 @bot.event
