@@ -7,5 +7,6 @@ requires-python = ">=3.11"
 dependencies = [
     "aiohttp>=3.11.13",
     "discord-py>=2.5.0",
+    "flask>=3.1.0",
     "python-dotenv>=1.0.1",
 ]
