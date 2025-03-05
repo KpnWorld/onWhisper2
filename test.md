@@ -334,7 +334,7 @@ class Info(commands.Cog):
 async def setup(bot):
     await bot.add_cog(Info(bot))
 ```
-# bot.py 🎉 V1.0.0
+# bot.py 🎉 V1.10.0
 ```
 import os
 import discord
@@ -379,11 +379,11 @@ statuses = [
     discord.Game("helping users"),
     discord.Activity(type=discord.ActivityType.watching, name="the chat"),
     discord.Activity(type=discord.ActivityType.listening, name="commands"),
-    discord.Game("Version 1.0.0 is out soon!")
+    discord.Game("Version 1.0.0 is out now!")
 ]
 
 async def load_cogs():
-    cogs = ["cogs.whisper", "cogs.owner", "cogs.info"]
+    cogs = ["cogs.whisper", "cogs.owner", "cogs.info", "cogs.help"]
     for cog in cogs:
         try:
             await bot.load_extension(cog)
@@ -411,36 +411,6 @@ async def change_activity():
     await bot.change_presence(activity=activity)
     logger.info(f"Changed bot activity to: {activity.name}")
 
-@bot.command()
-async def help(ctx):
-    embed = discord.Embed(title="Available Commands",
-                          description="List of commands you can use:",
-                          color=discord.Color.blue())
-    embed.add_field(name="/ping",
-                    value="Test the bot's responsiveness.",
-                    inline=False)
-    embed.add_field(name="/uptime",
-                    value="Check the bot's uptime.",
-                    inline=False)
-    embed.add_field(name="/serverinfo",
-                    value="Get information about the server.",
-                    inline=False)
-    embed.add_field(name="/userinfo [user]",
-                    value="Get information about a user.",
-                    inline=False)
-    embed.add_field(name="/botinfo",
-                    value="Get information about the bot.",
-                    inline=False)
-    embed.add_field(
-        name="/whisper_admin",
-        value="Send a secret message to any channel (admins/mods).",
-        inline=False)
-    embed.add_field(name="/whisper",
-                    value="Send a secret message in this channel.",
-                    inline=False)
-
-    logger.info(f"Help command used by {ctx.author}")
-    await ctx.send(embed=embed)
 
 @bot.event
 async def on_command_error(ctx, error):
