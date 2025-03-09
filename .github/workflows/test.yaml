@@ -19,7 +19,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
-        python-version: '3.8'  # Use the version you're using for the bot
+        python-version: '3.13'  # Use the version you're using for the bot
 
     - name: Install dependencies
       run: |
