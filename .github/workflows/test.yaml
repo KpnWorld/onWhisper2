@@ -1,0 +1,35 @@
+name: Test onWhisper Bot
+
+on:
+  push:
+    branches:
+      - main  # Run the workflow when code is pushed to the 'main' branch
+  pull_request:
+    branches:
+      - main  # Run the workflow on pull requests to the 'main' branch
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.8'  # Use the version you're using for the bot
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt  # Install the necessary dependencies
+
+    - name: Run tests
+      run: |
+        python -m unittest discover tests/  # Run your unit tests if you have them
+
+    - name: Run onWhisper bot
+      run: |
+        DISCORD_TOKEN=${{ secrets.DISCORD_TOKEN }} python bot.py  # Run the bot with the token from GitHub Secrets
